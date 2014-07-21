@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		 http://www.springframework.org/schema/context 
+		 http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		 http://www.springframework.org/schema/mvc 
+		 http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		 http://www.springframework.org/schema/jee
+		 http://www.springframework.org/schema/jee/spring-jee-3.0.xsd">
+	<!--We are using annotation based code -->
+	<context:annotation-config />
+	<!-- <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" -->
+	<!-- destroy-method="close"> -->
+	<!-- <property name="driverClassName" value="com.mysql.jdbc.Driver" /> -->
+	<!-- <property name="url" value="jdbc:mysql://localhost:3306/vehicle_rental" 
+		/> -->
+	<!-- <property name="username" value="root" /> -->
+	<!-- <property name="password" value="Welcome123" /> -->
+	<!-- <property name="initialSize" value="5" /> -->
+	<!-- <property name="maxActive" value="10" /> -->
+	<!-- </bean> -->
+
+	<!--Where the controllers are residing -->
+	<context:component-scan base-package="com.mindtree.vehiclebusiness.RentalController" />
+
+	<mvc:resources mapping="css/**" location="/css/" />
+	<mvc:resources mapping="js/**" location="/js/" />
+	<mvc:resources mapping="img/**" location="/img/" />
+	<mvc:annotation-driven />
+
+	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/VehicleRental"
+		resource-ref="true" />
+
+	<!-- Jaxb2Marshaller uses entity classes to perform marshalling/unmarshalling 
+		process. Here are the list of entity classes that are used. -->
+
+	<bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+		<property name="classesToBeBound">
+			<list>
+				<value>com.mindtree.vehiclebusiness.dto.BookingDto</value>
+				<value>com.mindtree.vehiclebusiness.dto.VehicleDto</value>
+				<value>com.mindtree.vehiclebusiness.dto.Vehicles</value>
+				<value>com.mindtree.vehiclebusiness.dto.ValueObject</value>
+				<value>com.mindtree.vehiclebusiness.dto.ValueObjects</value>
+				<value>com.mindtree.vehiclebusiness.dto.LoginDto</value>
+				<value>com.mindtree.vehiclebusiness.dto.Users</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- This bean uses to set the view i.e. plain text view or xml view -->
+
+	<bean
+		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="mediaTypes">
+			<map>
+				<entry key="xml" value="application/xml" />
+			</map>
+		</property>
+		<property name="viewResolvers">
+			<list>
+				<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- Setting Marshalling view -->
+	<bean id="vehicleXML"
+		class="org.springframework.web.servlet.view.xml.MarshallingView">
+		<constructor-arg ref="jaxbMarshaller" />
+	</bean>
+
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.BeanNameViewResolver" />
+
+	<bean id="rentalController"
+		class="com.mindtree.vehiclebusiness.controller.RentalController">
+		<property name="jaxb2Marshaller" ref="jaxbMarshaller" />
+	</bean>
+
+
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="/WEB-INF/resources/message" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="configLocations" value="classpath:hibernate.cfg.xml" />
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+
+	<bean id="vehicleService" class="com.mindtree.vehiclebusiness.service.VehicleServiceImpl"
+		autowire="byName">
+	</bean>
+
+	<bean id="bookingService" class="com.mindtree.vehiclebusiness.service.BookingServiceImpl"
+		autowire="byName">
+	</bean>
+
+	<bean id="loginService" class="com.mindtree.vehiclebusiness.service.LoginServiceImpl"
+		autowire="byName">
+	</bean>
+
+
+	<bean id="vehicleDAO" class="com.mindtree.vehiclebusiness.dao.VehicleDaoImpl"
+		autowire="byName">
+	</bean>
+
+	<bean id="bookingDAO" class="com.mindtree.vehiclebusiness.dao.BookingDaoImpl"
+		autowire="byName">
+	</bean>
+
+	<bean id="loginDAO" class="com.mindtree.vehiclebusiness.dao.LoginDaoImpl"
+		autowire="byName">
+	</bean>
+</beans>

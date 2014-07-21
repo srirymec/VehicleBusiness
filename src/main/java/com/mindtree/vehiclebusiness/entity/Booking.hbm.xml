@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.mindtree.vehiclebusiness.entity">
+ <class name="Booking" table="BOOKING">
+	<id name="id" type="integer" unsaved-value="0"
+		column="ID">
+		<generator class="increment" />
+	</id>
+	<property name="emailId"
+		column="EMAIL_ID"
+		type="string" />
+	<property name="bookedFrom"
+		column="FROM_DATE"
+		type="date" />
+	<property name="bookedTo"
+		column="TO_DATE"
+		type="date" />
+	<property name="category"
+		type="string"
+		column="CATEGORY"
+		length="120" />
+	<property name="custName"
+		type="string"
+		column="CUST_NAME"
+		length="120" />
+	<property name="isPaid"
+		type="string"
+		column="IS_PAID"
+		length="120" />
+	<property name="totalRent"
+		type="double"
+		column="TOTAL_RENT" />
+	<many-to-one
+		name="vehicle"
+		class="Vehicle"
+		column="REG_NO" />
+	</class>
+</hibernate-mapping>
