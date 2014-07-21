@@ -245,7 +245,7 @@
 					<proxyPort>${proxyPort}</proxyPort>
 					<buckets>
 						<property>
-							<name>vikesh-vehicle-rental/business/${project.version}</name>
+							<name>srini-vehicle-rental/business/${project.version}</name>
 							<value>**/target/*.war;public-read</value>
 						</property>
 					</buckets>
