@@ -246,7 +246,7 @@
 					<buckets>
 						<property>
 							<name>srini-vehicle-rental/business/${project.version}</name>
-							<value>**/target/*.war;public-read</value>
+							<value>**/target/*.war;private</value>
 						</property>
 					</buckets>
 				</configuration>
